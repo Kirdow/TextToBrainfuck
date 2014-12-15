@@ -6,6 +6,8 @@ private:
 	int size;
 	char* result;
 	int resultSize;
+	void Add(char* chars, int size);
+	void GetNearestMult(int diff, int* ra, int* rb);
 public:
 	BrainfuckConverter(const char* chars, int size);
 	~BrainfuckConverter();

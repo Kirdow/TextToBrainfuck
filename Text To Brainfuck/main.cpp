@@ -49,9 +49,8 @@ int main(int argc, char** argv)
 				for (dirSlash = len - 1; filePath[dirSlash] != '/' && filePath[dirSlash] != '\\' && dirSlash >= 0; dirSlash--){	}
 				if (dirSlash > -1)
 				{
-					char* outFileName = new char[dirSlash + _inLen + 1];
-					std::cout << dirSlash << " " << _inLen << " " << (dirSlash + _inLen + 1) << " " << strlen(outFileName) << std::endl;
-					std::cout << outFileName << std::endl;
+					char* outFileName = new char[dirSlash + _inLen + 2];
+					outFileName[dirSlash + _inLen + 1] = '\0';
 					for (int i = 0; i < dirSlash + 1; i++)
 					{
 						outFileName[i] = filePath[i];
