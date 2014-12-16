@@ -35,11 +35,11 @@ int main(int argc, char** argv)
 				char* textChars = new char[size];
 				f.readsome(textChars, size);
 				f.close();
-				/*BrainfuckConverter conv(textChars, size);
+				BrainfuckConverter conv(textChars, size);
 				conv.Convert();
-				char* result;
+				char* result = nullptr;
 				int resultSize = conv.GetResult(result);
-				*/
+				
 				std::cout << "Enter name of output file (Must be in the same directory as the input file): ";
 				char* _input = new char[1024];
 				std::cin >> _input;
@@ -59,7 +59,11 @@ int main(int argc, char** argv)
 					{
 						outFileName[i + dirSlash + 1] = _input[i];
 					}
-					std::cout << outFileName << std::endl;
+					std::ofstream ofs(outFileName);
+					ofs.write("Brainfuck Code: \r\n", 18);
+					ofs.write(result, resultSize);
+					ofs.close();
+//					std::cout << outFileName << std::endl;
 					while (!_kbhit())
 					{
 					}

@@ -41,6 +41,7 @@ bool BrainfuckConverter::Convert()
 		char* chars = new char[1024];
 		char c = this->chars[position];
 		int bDiff = 256;
+		int bDiffOriginal = -1;
 		int bDiffPos = -1;
 		//Checks for which of the indexes 1 - 9 that is the best to use.
 		for (int i = 1; i < 10; i++)
@@ -49,6 +50,7 @@ bool BrainfuckConverter::Convert()
 			if (diff < 0) diff = -diff;
 			if (diff < bDiff)
 			{
+				bDiffOriginal = values[i] - c;
 				bDiff = diff;
 				bDiffPos = i;
 			}
@@ -58,27 +60,50 @@ bool BrainfuckConverter::Convert()
 		{
 			int a = 0;
 			int b = 0;
+			//Gets the best pair to multiply to get to the destination
 			GetNearestMult(bDiff, &a, &b);
-			char* tChars = new char[a];
-			for (int i = 0; i < a; i++)
+			//Checks if a or b is = 0, if so, skips the loop
+			int val = a * b;
+			char* tChars = nullptr;
+			if (val > 0)
 			{
-				tChars[i] = '+';
+				tChars = new char[a];
+				//Sets the first multiplication 'a' at index 0
+				for (int i = 0; i < a; i++)
+				{
+					tChars[i] = '+';
+				}
+				//Adds those chars to the final code
+				Add(tChars, a);
+				tChars = new char[b + bDiffPos * 2 + 3];
+				//Adds the loop start, the characters to get to the correct index and the charecters to get back
+				tChars[0] = '[';
+				for (int i = 0; i < bDiffPos; i++)
+				{
+					tChars[i + 1] = '>';
+					tChars[1 + bDiffPos + b + i] = '<';
+				}
+				//Adds the values at the correct index
+				for (int i = 0; i < b; i++)
+				{
+					tChars[1 + bDiffPos + i] = bDiffOriginal < 0 ? '-' : '+';
+				}
+				//Adds the ending of the loop
+				tChars[b + bDiffPos * 2 + 1] = '-';
+				tChars[b + bDiffPos * 2 + 2] = ']';
+				//Adds the loop to the final code
+				Add(tChars, b + bDiffPos * 2 + 3);
 			}
-			Add(tChars, a);
-			tChars = new char[b + bDiffPos * 2 + 3];
-			tChars[0] = '[';
-			for (int i = 0; i < bDiffPos; i++)
+			int nDiff = bDiffOriginal + (bDiff < 0 ? val : -val);
+			tChars = new char[nDiff];
+			int pDiff = nDiff < 0 ? -nDiff : nDiff;
+			for (int i = 0; i < pDiff; i++)
 			{
-				tChars[i + 1] = '>';
-				tChars[1 + bDiffPos + b + i] = '<';
+				tChars[i] = nDiff < 0 ? '-' : '+';
 			}
-			for (int i = 0; i < b; i++)
-			{
-				tChars[1 + bDiffPos + i] = '+';
-			}
-			tChars[b + bDiffPos * 2 + 1] = '-';
-			tChars[b + bDiffPos * 2 + 2] = ']';
-			Add(tChars, b + bDiffPos * 2 + 3);
+			Add(tChars, nDiff);
+			Add(".", 1);
+
 		}
 		position++;
 	}
