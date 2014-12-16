@@ -12,6 +12,6 @@ public:
 	BrainfuckConverter(const char* chars, int size);
 	~BrainfuckConverter();
 	bool Convert();
-	int GetResult(char* result);
+	int GetResult(char** result);
 };
 

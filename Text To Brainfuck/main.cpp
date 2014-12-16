@@ -31,14 +31,23 @@ int main(int argc, char** argv)
 			if (exists)
 			{
 				std::ifstream f(filePath);
-				int size = f.tellg();
-				char* textChars = new char[size];
-				f.readsome(textChars, size);
+				int size = -1;
+				while (f)
+				{
+					char* ch = new char[1];
+					f.read(ch, 1);
+					size++;
+				}
+				f.close();
+				f.open(filePath);
+				char* textChars = new char[size+1];
+				textChars[size] = '\0';
+				f.read(textChars, size);
 				f.close();
 				BrainfuckConverter conv(textChars, size);
 				conv.Convert();
 				char* result = nullptr;
-				int resultSize = conv.GetResult(result);
+				int resultSize = conv.GetResult(&result);
 				
 				std::cout << "Enter name of output file (Must be in the same directory as the input file): ";
 				char* _input = new char[1024];

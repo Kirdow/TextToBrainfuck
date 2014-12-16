@@ -94,8 +94,8 @@ bool BrainfuckConverter::Convert()
 				//Adds the loop to the final code
 				Add(tChars, b + bDiffPos * 2 + 3);
 			}
-			int nDiff = bDiffOriginal + (bDiff < 0 ? val : -val);
-			tChars = new char[nDiff];
+			int nDiff = bDiffOriginal + (bDiff < 0 ? -val : val);
+			tChars = new char[nDiff < 0 ? -nDiff : nDiff];
 			int pDiff = nDiff < 0 ? -nDiff : nDiff;
 			for (int i = 0; i < pDiff; i++)
 			{
@@ -110,9 +110,9 @@ bool BrainfuckConverter::Convert()
 	return true;
 }
 
-int BrainfuckConverter::GetResult(char* result)
+int BrainfuckConverter::GetResult(char** result)
 {
-	result = this->result;
+	*result = this->result;
 	return resultSize;
 }
 
